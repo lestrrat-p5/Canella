@@ -18,7 +18,7 @@ our @EXPORT = qw(
     task
 );
 
-sub Cannela::define {
+sub Canella::define {
     my $class = shift;
     $_[0]->();
 }

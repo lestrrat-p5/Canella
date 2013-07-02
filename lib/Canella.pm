@@ -18,7 +18,7 @@ Canella - Simple Deploy Tool A La Cinnamon
 
     use Canella::DSL;
 
-    Cannela->define({
+    Canella->define({
 
         role "production" => (
             hosts => [ qw(host1 host2) ],
