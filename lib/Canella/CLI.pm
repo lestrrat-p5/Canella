@@ -25,8 +25,6 @@ sub parse_argv {
     }
 
     my $set_vars = delete $opts->{set} || {};
-use Data::Dumper;
-warn Dumper($set_vars);
     foreach my $var_name (keys %$set_vars) {
         debugf("Setting variable from command line %s -> %s", $var_name, $set_vars->{$var_name});
         $ctx->parameters->set($var_name, $set_vars->{$var_name});
