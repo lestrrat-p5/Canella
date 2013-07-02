@@ -1,7 +1,7 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Simple Deploy Tool A La Cinnamon",
    "author" : [
-      "Daisuke Maki <lestrrat+github@gmail.com>"
+      "Daisuke Maki <daisuke@endeworks.jp>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v0.4.2, CPAN::Meta::Converter version 2.120921",
@@ -42,6 +42,14 @@
       },
       "runtime" : {
          "requires" : {
+            "AnyEvent" : "0",
+            "Carp::Always" : "0",
+            "Guard" : "0",
+            "Hash::MultiValue" : "0",
+            "IPC::Run" : "0",
+            "Log::Minimal" : "0",
+            "Moo" : "0",
+            "Net::OpenSSH" : "0",
             "perl" : "5.008005"
          }
       },
@@ -52,5 +60,19 @@
       }
    },
    "release_status" : "unstable",
-   "version" : "0.01"
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/lestrrat/p5-Canella/issues"
+      },
+      "homepage" : "https://github.com/lestrrat/p5-Canella",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/lestrrat/p5-Canella.git",
+         "web" : "https://github.com/lestrrat/p5-Canella"
+      }
+   },
+   "version" : "0.01",
+   "x_contributors" : [
+      "Daisuke Maki <lestrrat+github@gmail.com>"
+   ]
 }
