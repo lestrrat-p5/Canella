@@ -18,6 +18,11 @@ our @EXPORT = qw(
     task
 );
 
+sub Cannela::define {
+    my $class = shift;
+    $_[0]->();
+}
+
 sub get (@) {
     $Canella::Context::CTX->parameters->get(@_);
 }
