@@ -1,6 +1,7 @@
 package Canella::DSL;
 use strict;
 use Exporter 'import';
+use Canella 'CTX';
 use Canella::BlockGuard;
 use Canella::Exec::Local;
 use Canella::Exec::Remote;
@@ -24,15 +25,15 @@ sub Canella::define {
 }
 
 sub get (@) {
-    $Canella::Context::CTX->parameters->get(@_);
+    CTX->parameters->get(@_);
 }
 
 sub set (@) {
-    $Canella::Context::CTX->parameters->set(@_);
+    CTX->parameters->set(@_);
 }
 
 sub role ($@) {
-    $Canella::Context::CTX->add_role(@_);
+    CTX->add_role(@_);
 
 }
 
@@ -42,7 +43,7 @@ sub task ($$) {
     my $ref = ref $task_def;
     my %map;
     if ($ref eq 'CODE') {
-        $Canella::Context::CTX->add_task(
+        CTX->add_task(
             Canella::Task->new(
                 name => $name,
                 code => $task_def, 
@@ -50,7 +51,7 @@ sub task ($$) {
         );
     } elsif ($ref eq 'HASH') {
         foreach my $subname (keys %$task_def) {
-            $Canella::Context::CTX->add_task(
+            CTX->add_task(
                 Canella::Task->new(
                     name => "$name:$subname",
                     code => $task_def->{$subname},
@@ -61,7 +62,7 @@ sub task ($$) {
 }
 
 sub run(@) {
-    $Canella::Context::CTX->run_cmd(@_);
+    CTX->run_cmd(@_);
 }
 
 sub remote (&$) {
@@ -69,7 +70,7 @@ sub remote (&$) {
 
     local $Canella::Context::REMOTE = Canella::Exec::Remote->new(
         host => $host,
-        user => $Canella::Context::CTX->parameters->get('user'),
+        user => CTX->parameters->get('user'),
     );
 
     $code->($host);

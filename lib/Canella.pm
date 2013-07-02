@@ -2,8 +2,12 @@ package Canella;
 use 5.008005;
 use strict;
 use warnings;
+use Exporter 'import';
+our @EXPORT_OK = qw(CTX);
 
 our $VERSION = "0.01";
+
+sub CTX { $Canella::Context::CTX }
 
 1;
 __END__
