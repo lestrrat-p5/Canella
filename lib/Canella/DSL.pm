@@ -32,12 +32,7 @@ sub set (@) {
 }
 
 sub role ($@) {
-    my ($name, %args) = @_;
-    if ($args{parameters}) {
-        $args{parameters} = Hash::MultiValue->new(%{$args{parameters}});
-    }
-    $Canella::Context::CTX->roles->set($name,
-        Canella::Role->new(name => $name, %args));
+    $Canella::Context::CTX->add_role(@_);
 
 }
 
@@ -47,18 +42,15 @@ sub task ($$) {
     my $ref = ref $task_def;
     my %map;
     if ($ref eq 'CODE') {
-        $Canella::Context::CTX->tasks->set(
-            $name, 
+        $Canella::Context::CTX->add_task(
             Canella::Task->new(
                 name => $name,
                 code => $task_def, 
             )
         );
     } elsif ($ref eq 'HASH') {
-        my $tasks = $Canella::Context::CTX->tasks;
         foreach my $subname (keys %$task_def) {
-            $tasks->set(
-                "$name:$subname",
+            $Canella::Context::CTX->add_task(
                 Canella::Task->new(
                     name => "$name:$subname",
                     code => $task_def->{$subname},
@@ -69,30 +61,17 @@ sub task ($$) {
 }
 
 sub run(@) {
-    my @cmd = @_;
-    my $cmd;
-    if ($REMOTE) {
-        $REMOTE->cmd(\@cmd);
-        $cmd = $REMOTE;
-    } else {
-        $cmd = Canella::Exec::Local->new(cmd => \@cmd);
-    }
-    $cmd->execute();
-    if ($cmd->has_error) {
-        croakf("Error executing command: %d", $cmd->error);
-    }
-    return ($cmd->stdout, $cmd->stderr);
+    $Canella::Context::CTX->run_cmd(@_);
 }
 
 sub remote (&$) {
     my ($code, $host) = @_;
 
-    local $REMOTE = Canella::Exec::Remote->new(
+    local $Canella::Context::REMOTE = Canella::Exec::Remote->new(
         host => $host,
         user => $Canella::Context::CTX->parameters->get('user'),
     );
 
-    debugf("Executing remote() block");
     $code->($host);
 }
 
