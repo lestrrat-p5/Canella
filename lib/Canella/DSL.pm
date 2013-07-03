@@ -15,6 +15,7 @@ our @EXPORT = qw(
     role
     remote
     run
+    run_local
     set
     task
 );
@@ -62,6 +63,11 @@ sub task ($$) {
 }
 
 sub run(@) {
+    CTX->run_cmd(@_);
+}
+
+sub run_local(@) {
+    local $Canella::Context::REMOTE;
     CTX->run_cmd(@_);
 }
 
