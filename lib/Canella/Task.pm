@@ -1,5 +1,6 @@
 package Canella::Task;
 use Moo;
+use Canella::Context 'CTX';
 
 has code => (
     is => 'ro',
@@ -16,7 +17,7 @@ sub add_guard;
 sub execute {
     my $self = shift;
 
-    $Coro::current->{Canella}->{current_task} = $self;
+    CTX->stash(current_task => $self);
 
     my %guards;
     no warnings 'redefine';

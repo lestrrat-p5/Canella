@@ -27,7 +27,7 @@ sub Canella::define {
 }
 
 sub current_task {
-    return $Coro::current->{Canella}->{current_task};
+    return CTX->stash('current_task');
 }
 
 sub get (@) {
@@ -72,17 +72,19 @@ sub run(@) {
 }
 
 sub run_local(@) {
-    local $Coro::current->{Canella}->{current_remote};
+    my $stash = CTX->stash;
+    local $stash->{current_remote};
     CTX->run_cmd(@_);
 }
 
 sub remote (&$) {
     my ($code, $host) = @_;
 
-    $Coro::current->{Canella}->{current_remote} = Canella::Exec::Remote->new(
+    my $ctx = CTX;
+    $ctx->stash(current_remote => Canella::Exec::Remote->new(
         host => $host,
-        user => CTX->parameters->get('user'),
-    );
+        user => $ctx->parameters->get('user'),
+    ));
 
     $code->($host);
 }

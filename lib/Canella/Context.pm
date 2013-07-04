@@ -58,6 +58,24 @@ sub load_config {
     }
 }
 
+# Thread-specific stash
+sub stash {
+    my $self = shift;
+    my $stash = $Coro::current->{Canella} ||= {};
+
+    if (@_ == 0) {
+        return $stash;
+    }
+
+    if (@_ == 1) {
+        return $stash->{$_[0]};
+    }
+
+    while (my ($key, $value) = splice @_, 0, 2) {
+        $stash->{$key} = $value;
+    }
+}
+
 sub add_role {
     my ($self, $name, %args) = @_;
 
@@ -77,7 +95,7 @@ sub build_cmd_executor {
     my ($self, @cmd) = @_;
 
     my $cmd;
-    if (my $remote = $Coro::current->{Canella}->{current_remote}) {
+    if (my $remote = $self->stash('current_remote')) {
         $remote->cmd(\@cmd);
         $cmd = $remote;
     } else {
