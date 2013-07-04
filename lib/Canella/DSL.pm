@@ -24,11 +24,6 @@ our @EXPORT = qw(
     task
 );
 
-sub Canella::define {
-    my $class = shift;
-    $_[0]->();
-}
-
 sub current_remote {
     return CTX->stash('current_remote');
 }

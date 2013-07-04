@@ -22,47 +22,45 @@ Canella - Simple Deploy Tool A La Cinnamon
 
     use Canella::DSL;
 
-    Canella->define({
-        role "production" => (
-            hosts => [ qw(host1 host2) ],
-        );
+    role "production" => (
+        hosts => [ qw(host1 host2) ],
+    );
 
-        task "setup:perl" => sub {
-            my $host = shift;
-            remote {
-                on_finish { run "rm", "-rf", "xbuild" };
-                run "git", "clone", "git://github.com/tagomoris/xbuild.git";
-                run "xbuild/perl-install", "5.16.3", "/opt/local/perl-5.16";
-            } $host;
-        };
+    task "setup:perl" => sub {
+        my $host = shift;
+        remote {
+            on_finish { run "rm", "-rf", "xbuild" };
+            run "git", "clone", "git://github.com/tagomoris/xbuild.git";
+            run "xbuild/perl-install", "5.16.3", "/opt/local/perl-5.16";
+        } $host;
+    };
 
-        task "setup:apache" => sub {
-            my $host = shift;
-            remote {
-                    run "yum", "install", "apache2";
-            } $host;
-        };
+    task "setup:apache" => sub {
+        my $host = shift;
+        remote {
+                run "yum", "install", "apache2";
+        } $host;
+    };
 
-        task deploy => sub {
-            my $host = shift;
-            remote {
-                my $dir = get "deploy_to";
-                run "cd $dir && git pull";
-            } $host;
-        };
+    task deploy => sub {
+        my $host = shift;
+        remote {
+            my $dir = get "deploy_to";
+            run "cd $dir && git pull";
+        } $host;
+    };
 
-        task "restart:app" => sub {
-            my $host = shift;
-            remote {
-                run "svc -h /service/myapp";
-            } $host;
-        };
-        task "restart:apache" => sub {
-            my $host = shift;
-            remote {
-                run "apachectl restart";
-            } $host;
-        };
+    task "restart:app" => sub {
+        my $host = shift;
+        remote {
+            run "svc -h /service/myapp";
+        } $host;
+    };
+    task "restart:apache" => sub {
+        my $host = shift;
+        remote {
+            run "apachectl restart";
+        } $host;
     };
 
 =head1 INVOCATION
