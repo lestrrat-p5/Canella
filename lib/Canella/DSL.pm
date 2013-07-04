@@ -29,6 +29,10 @@ sub Canella::define {
     $_[0]->();
 }
 
+sub current_remote {
+    return CTX->stash('current_remote');
+}
+
 sub current_task {
     return CTX->stash('current_task');
 }
@@ -92,11 +96,11 @@ sub remote (&$) {
 }
 
 sub scp_get(@) {
-    CTX->stash('current_remote')->scp_get(@_);
+    current_remote->connection->scp_get(@_);
 }
 
 sub scp_put(@) {
-    CTX->stash('current_remote')->scp_get(@_);
+    current_remote->connection->scp_put(@_);
 }
 
 sub on_finish(&;$) {
