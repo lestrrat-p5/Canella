@@ -3,6 +3,7 @@ use Moo;
 use Hash::MultiValue;
 use Canella::Exec::Local;
 use Canella::Log;
+use Canella::TaskRunner;
 our $CTX;
 our $REMOTE;
 
@@ -19,6 +20,12 @@ has roles => (
 has tasks => (
     is => 'ro',
     default => sub { Hash::MultiValue->new() }
+);
+
+has runner => (
+    is => 'ro',
+    lazy => 1,
+    builder => 'build_runner',
 );
 
 has mode => (
@@ -78,6 +85,10 @@ sub run_cmd {
         croakf("Error executing command: %d", $cmd->error);
     }
     return ($cmd->stdout, $cmd->stderr);
+}
+
+sub build_runner {
+    return Canella::TaskRunner->new;
 }
 
 1;

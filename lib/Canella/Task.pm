@@ -18,6 +18,7 @@ sub execute {
     my $self = shift;
 
     my %guards;
+    no warnings 'redefine';
     local *add_guard = sub {
         $guards{$_[1]} = $_[2];
     };

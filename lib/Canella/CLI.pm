@@ -73,34 +73,8 @@ sub run {
     }
     $ctx->parameters->set(role => $role_name);
 
-    # Register per-role parameters, only if they are not set
-    my %has_key = map { ($_ => 1) } $ctx->parameters->keys;
-    my %tmp_key;
-    foreach my $param_key ($role->parameters->keys) {
-        if ($has_key{$param_key}) {
-            next;
-        }
-        debugf("Applying role default parameter %s", $param_key);
-        $tmp_key{$param_key} = $ctx->parameters->get($param_key);
-        $ctx->parameters->set($param_key, $role->parameters->get($param_key));
-    }
-    my $block_ctx = guard {
-        my $params = $ctx->parameters;
-        foreach my $param_key (keys %tmp_key) {
-            debugf("Restoring paramter value for %s", $param_key);
-            $params->set($param_key, $tmp_key{$param_key});
-        }
-    };
-    my $hosts = $role->get_hosts();
-    foreach my $host (@$hosts) {
-        foreach my $task (@tasks) {
-            local $@;
-            eval { $task->execute($host) };
-            if (my $E = $@) {
-                critf("[%s] %s", $host, $E);
-            }
-        }
-    }
+    my $runner = $ctx->runner;
+    $runner->execute($ctx, role => $role, tasks => \@tasks);
 }
 
 1;
