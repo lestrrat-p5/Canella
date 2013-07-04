@@ -43,7 +43,7 @@
       "runtime" : {
          "requires" : {
             "AnyEvent" : "0",
-            "Carp::Always" : "0",
+            "Coro" : "0",
             "Guard" : "0",
             "Hash::MultiValue" : "0",
             "IPC::Run" : "0",
