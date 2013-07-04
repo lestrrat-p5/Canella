@@ -9,7 +9,13 @@ our $REMOTE;
 
 has concurrency => (
     is => 'rw',
-    default => 0
+    default => 8,
+    isa => sub { die "concurrency must be > 0" unless $_[0] > 0 }
+);
+
+has override_parameters => (
+    is => 'ro',
+    default => sub { Hash::MultiValue->new() }
 );
 
 has parameters => (

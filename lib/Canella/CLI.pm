@@ -27,8 +27,7 @@ sub parse_argv {
 
     my $set_vars = delete $opts->{set} || {};
     foreach my $var_name (keys %$set_vars) {
-        debugf("Setting variable from command line %s -> %s", $var_name, $set_vars->{$var_name});
-        $ctx->parameters->set($var_name, $set_vars->{$var_name});
+        $ctx->override_parameters->set($var_name, $set_vars->{$var_name});
     }
 
     foreach my $key (keys %$opts) {
@@ -53,6 +52,13 @@ sub run {
     }
 
     $ctx->load_config();
+    foreach my $key ($ctx->override_parameters->keys) {
+        my $override = $ctx->override_parameters->get($key);
+        if (defined $ctx->parameters->get($key)) {
+            debugf("Overriding parameters '%s' with command line value '%s'", $key, $override);
+        }
+        $ctx->parameters->set($key, $override);
+    }
 
     if ($ctx->mode eq 'dump') {
         $ctx->dump_config();
@@ -79,3 +85,11 @@ sub run {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Canella::CLI - CLI Component For Canella
+
+=cut
