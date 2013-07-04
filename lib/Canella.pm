@@ -111,6 +111,12 @@ With Canella you can do
 Cinnamon 0.22 has a broken concurrency problem where some tasks are
 repeatedly run against the same host.
 
+=item I WANT ALL THE ABOVE TO WORK NOW
+
+Yes, I want all the above to work now, and not in a few months or weeks.
+
+=back
+
 =head1 SEE ALSO
 
 L<Cinnamon>
