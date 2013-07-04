@@ -1,6 +1,6 @@
 package Canella::Task;
 use Moo;
-use Canella::Context 'CTX';
+use Canella 'CTX';
 
 has code => (
     is => 'ro',
