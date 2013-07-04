@@ -54,7 +54,7 @@ sub task ($$) {
     CTX->add_task(
         Canella::Task->new(
             name => $name,
-            code => $task_def, 
+            code => $code, 
         )
     );
 }
