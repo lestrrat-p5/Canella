@@ -9,6 +9,7 @@ BEGIN {
     foreach my $method (@Log::Minimal::EXPORT) {
         no strict 'refs';
         *{$method} = sub {
+            local $Log::Minimal::COLOR = 1;
             local $Log::Minimal::PRINT = \&MYPRINT;
             "Log::Minimal::$method"->(@_);
         };
