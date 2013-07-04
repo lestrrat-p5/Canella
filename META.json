@@ -47,6 +47,7 @@
             "Guard" : "0",
             "Hash::MultiValue" : "0",
             "IPC::Run" : "0",
+            "JSON" : "0",
             "Log::Minimal" : "0",
             "Moo" : "0",
             "Net::OpenSSH" : "0",
