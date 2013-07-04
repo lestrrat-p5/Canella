@@ -61,10 +61,10 @@ sub load_config {
 sub dump_config {
     my $self = shift;
     require JSON;
-    JSON->new->pretty->utf8->convert_blessed(1)->encode({
+    print JSON->new->pretty->utf8->allow_blessed(1)->convert_blessed(1)->encode({
         config      => $self->config,
         parameters  => $self->parameters->as_hashref_mixed,
-        roles       => $self->roles,
+        roles       => $self->roles->as_hashref_mixed,
         tasks       => [ $self->tasks->keys ],
     });
 }
