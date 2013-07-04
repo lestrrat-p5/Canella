@@ -6,47 +6,45 @@ Canella - Simple Deploy Tool A La Cinnamon
 
     use Canella::DSL;
 
-    Canella->define({
-        role "production" => (
-            hosts => [ qw(host1 host2) ],
-        );
+    role "production" => (
+        hosts => [ qw(host1 host2) ],
+    );
 
-        task "setup:perl" => sub {
-            my $host = shift;
-            remote {
-                on_finish { run "rm", "-rf", "xbuild" };
-                run "git", "clone", "git://github.com/tagomoris/xbuild.git";
-                run "xbuild/perl-install", "5.16.3", "/opt/local/perl-5.16";
-            } $host;
-        };
+    task "setup:perl" => sub {
+        my $host = shift;
+        remote {
+            on_finish { run "rm", "-rf", "xbuild" };
+            run "git", "clone", "git://github.com/tagomoris/xbuild.git";
+            run "xbuild/perl-install", "5.16.3", "/opt/local/perl-5.16";
+        } $host;
+    };
 
-        task "setup:apache" => sub {
-            my $host = shift;
-            remote {
-                    run "yum", "install", "apache2";
-            } $host;
-        };
+    task "setup:apache" => sub {
+        my $host = shift;
+        remote {
+                run "yum", "install", "apache2";
+        } $host;
+    };
 
-        task deploy => sub {
-            my $host = shift;
-            remote {
-                my $dir = get "deploy_to";
-                run "cd $dir && git pull";
-            } $host;
-        };
+    task deploy => sub {
+        my $host = shift;
+        remote {
+            my $dir = get "deploy_to";
+            run "cd $dir && git pull";
+        } $host;
+    };
 
-        task "restart:app" => sub {
-            my $host = shift;
-            remote {
-                run "svc -h /service/myapp";
-            } $host;
-        };
-        task "restart:apache" => sub {
-            my $host = shift;
-            remote {
-                run "apachectl restart";
-            } $host;
-        };
+    task "restart:app" => sub {
+        my $host = shift;
+        remote {
+            run "svc -h /service/myapp";
+        } $host;
+    };
+    task "restart:apache" => sub {
+        my $host = shift;
+        remote {
+            run "apachectl restart";
+        } $host;
     };
 
 # INVOCATION
@@ -95,17 +93,21 @@ Canella is yet another deploy tool, based on [Cinnamon](http://search.cpan.org/p
     Cinnamon 0.22 has a broken concurrency problem where some tasks are
     repeatedly run against the same host.
 
-    # SEE ALSO
+- I WANT ALL THE ABOVE TO WORK NOW
 
-    [Cinnamon](http://search.cpan.org/perldoc?Cinnamon)
+    Yes, I want all the above to work now, and not in a few months or weeks.
 
-    # LICENSE
+# SEE ALSO
 
-    Copyright (C) Daisuke Maki.
+[Cinnamon](http://search.cpan.org/perldoc?Cinnamon)
 
-    This library is free software; you can redistribute it and/or modify
-    it under the same terms as Perl itself.
+# LICENSE
 
-    # AUTHOR
+Copyright (C) Daisuke Maki.
 
-    Daisuke Maki <daisuke@endeworks.jp>
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+# AUTHOR
+
+Daisuke Maki <daisuke@endeworks.jp>
