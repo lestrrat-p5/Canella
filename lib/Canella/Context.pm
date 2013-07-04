@@ -61,7 +61,12 @@ sub load_config {
 sub dump_config {
     my $self = shift;
     require JSON;
-    JSON->new->pretty->utf8->encode($self->config);
+    JSON->new->pretty->utf8->convert_blessed->encode({
+        config      => $self->config,
+        parameters  => $self->parameters->as_hashref_mixed,
+        roles       => $self->roles,
+        tasks       => [ $self->tasks->keys ],
+    });
 }
 
 # Thread-specific stash

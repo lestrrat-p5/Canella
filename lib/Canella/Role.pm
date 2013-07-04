@@ -14,6 +14,15 @@ sub get_hosts {
     }
     return $hosts;
 }
-    
+
+sub TO_JSON {
+    my $self = shift;
+    return {
+        name => $self->name,
+        hosts => $self->get_hosts(),
+        parameters => $self->parameters->as_hashref_mixed,
+    };
+}
+        
 
 1;
