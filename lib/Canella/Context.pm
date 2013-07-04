@@ -5,7 +5,6 @@ use Canella::Exec::Local;
 use Canella::Log;
 use Canella::TaskRunner;
 our $CTX;
-our $REMOTE;
 
 has concurrency => (
     is => 'rw',
@@ -78,9 +77,9 @@ sub build_cmd_executor {
     my ($self, @cmd) = @_;
 
     my $cmd;
-    if ($REMOTE) {
-        $REMOTE->cmd(\@cmd);
-        $cmd = $REMOTE;
+    if (my $remote = $Coro::current->{Canella}->{current_remote}) {
+        $remote->cmd(\@cmd);
+        $cmd = $remote;
     } else {
         $cmd = Canella::Exec::Local->new(cmd => \@cmd);
     }

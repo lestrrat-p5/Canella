@@ -72,14 +72,14 @@ sub run(@) {
 }
 
 sub run_local(@) {
-    local $Canella::Context::REMOTE;
+    local $Coro::current->{Canella}->{current_remote};
     CTX->run_cmd(@_);
 }
 
 sub remote (&$) {
     my ($code, $host) = @_;
 
-    local $Canella::Context::REMOTE = Canella::Exec::Remote->new(
+    $Coro::current->{Canella}->{current_remote} = Canella::Exec::Remote->new(
         host => $host,
         user => CTX->parameters->get('user'),
     );
