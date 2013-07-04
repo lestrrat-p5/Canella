@@ -7,6 +7,11 @@ use Canella::TaskRunner;
 our $CTX;
 our $REMOTE;
 
+has concurrency => (
+    is => 'rw',
+    default => 0
+);
+
 has parameters => (
     is => 'ro',
     default => sub { Hash::MultiValue->new() }

@@ -12,8 +12,8 @@ sub execute {
     my $tasks = $args{tasks};
 
     my $hosts = $role->get_hosts();
-#    my $concurrency = $ctx->concurrency > 0 ?
-#        $ctx->concurrency : scalar @$hosts;
+    my $concurrency = $ctx->concurrency > 0 ?
+        $ctx->concurrency : scalar @$hosts;
 
     # Register per-role parameters, only if they are not set
     my %has_key = map { ($_ => 1) } $ctx->parameters->keys;
@@ -39,6 +39,10 @@ sub execute {
         push @coros, async {
             my ($host, $tasks) = @_;
             foreach my $task (@$tasks) {
+                debugf "Starting task %s on host %s", $task->name, $host;
+                my $guard = guard {
+                    debugf "End task %s on host %s", $task->name, $host;
+                };
                 local $@;
                 eval { $task->execute($host) };
                 if (my $E = $@) {
@@ -46,6 +50,11 @@ sub execute {
                 }
             }
         } $host, $tasks;
+
+        if (@coros >= $concurrency) {
+            $_->join for @coros;
+            @coros = ();
+        }
     }
 
     $_->join for @coros;

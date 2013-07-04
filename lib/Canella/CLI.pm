@@ -16,8 +16,9 @@ sub parse_argv {
         auto_help
     ));
     my @optspec = qw(
-        config=s
-        set=s%
+        config|c=s
+        set|s=s%
+        concurrency|C=i
     );
     my $opts = {};
     if (! $p->getoptions($opts, @optspec)) {

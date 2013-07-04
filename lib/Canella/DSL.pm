@@ -10,6 +10,7 @@ use Canella::Role;
 use Canella::Task;
 our $REMOTE;
 our @EXPORT = qw(
+    current_task
     get
     on_finish
     role
@@ -23,6 +24,10 @@ our @EXPORT = qw(
 sub Canella::define {
     my $class = shift;
     $_[0]->();
+}
+
+sub current_task {
+    return $Coro::current->{Canella}->{current_task};
 }
 
 sub get (@) {
@@ -91,7 +96,7 @@ sub on_finish(&;$) {
         code => $code,
         should_fire_cb => sub { 1 }
     );
-    $Canella::Task::CURRENT->add_guard($guard->name, $guard);
+    current_task->add_guard($guard->name, $guard);
 }
 
 sub on_error (&;$) {
@@ -102,7 +107,7 @@ sub on_error (&;$) {
         code => $code,
         should_fire_cb => sub { $_[1]->has_error }
     );
-    $Canella::Task::CURRENT->add_guard($guard->name, $guard);
+    current_task->add_guard($guard->name, $guard);
 }
 
 
