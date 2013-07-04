@@ -50,27 +50,13 @@ sub role ($@) {
 }
 
 sub task ($$) {
-    my ($name, $task_def) = @_;
-
-    my $ref = ref $task_def;
-    my %map;
-    if ($ref eq 'CODE') {
-        CTX->add_task(
-            Canella::Task->new(
-                name => $name,
-                code => $task_def, 
-            )
-        );
-    } elsif ($ref eq 'HASH') {
-        foreach my $subname (keys %$task_def) {
-            CTX->add_task(
-                Canella::Task->new(
-                    name => "$name:$subname",
-                    code => $task_def->{$subname},
-                )
-            );
-        }
-    }
+    my ($name, $code) = @_;
+    CTX->add_task(
+        Canella::Task->new(
+            name => $name,
+            code => $task_def, 
+        )
+    );
 }
 
 sub run(@) {
@@ -141,7 +127,37 @@ sub on_error (&;$) {
 
 __END__
 
+=head1 NAME
+
+Canolla::DSL - DSL For Canolla File
+
+=head1 SYNOPSIS
+
+    use Canolla::DSL;
+
 =head1 PROVIDED FUNCTIONS
+
+=head2 current_task()
+
+Returns the current task object.
+
+=head2 current_remote()
+
+Returns the current remote object, if available
+
+=head2 get $name
+
+Return the variable of the parameter pointed by $name. Parameters can be
+set by calling C<set()>, or by specifying them from the canella command line.
+
+=head2 on_finish \&code
+
+Executes the given C<\&code> at the end of the task.
+
+TODO: Currently this does not run the commands remotely even when you set
+on_finish() inside remote().
+
+TODO: Order of execution is not guaranteed. Need to either fix it or document it
 
 =head2 role $name, @spec;
 
@@ -157,5 +173,41 @@ __END__
         hosts => ...,
         params => { ... local parameters ... }
     );
+
+=head2 remote \&code, $host
+
+Specifies that within the given block C<\&code>, C<run()> commands are run 
+on the host specified by C<$host>
+
+=head2 run @cmd
+
+Executes C<@cmd>. If called inside a C<remote()> block, the command will be
+executed on the remote host. Otherwise it will be executed locally
+
+=head2 run_local @cmd
+
+Executes C<@cmd>, but always do so on the local machine, regardless of context.
+
+=head2 scp_get @args
+
+Calls Net::OpenSSH::scp_get on the currently connected host. Must be called
+inside a C<remote()> block
+
+=head2 scp_put @args
+
+Calls Net::OpenSSH::scp_put on the currently connected host. Must be called
+inside a C<remote()> block
+
+=head2 set $name, $value
+
+Sets the parameter C<$name> to point to C<$value>
+
+=head2 task $name, \&code
+
+Declare a new task. There's no notion of hierarchical tasks, but you can
+always declare them by hand:
+
+    task "setup:perl" => sub { ... };
+    task "setup:nginx" => sub { ... };
 
 =cut
