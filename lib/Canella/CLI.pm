@@ -44,9 +44,6 @@ sub run {
     my $ctx = Canella::Context->new;
     local $Canella::Context::CTX = $ctx;
     my @remaining = $self->parse_argv($ctx, @argv);
-    if (@remaining < 2) {
-        croakf("need a role and a task");
-    }
 
     $ctx->load_config();
     foreach my $key ($ctx->override_parameters->keys) {
@@ -62,6 +59,9 @@ sub run {
         return;
     }
 
+    if (@remaining < 2) {
+        croakf("need a role and a task");
+    }
     my $role_name = shift @remaining;
     my $role = $ctx->roles->get($role_name);
     if (! $role) {
