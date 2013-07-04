@@ -64,7 +64,7 @@ sub execute {
             },
             on_eof => sub { $cv->end },
             on_error => sub {
-                if ($? != POSIX::EPIPE) {
+                if ($! != POSIX::EPIPE) {
                     critf("[%s :: %s] %s", $host, $name, $_[2]);
                 }
                 $cv->end;
