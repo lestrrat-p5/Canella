@@ -16,6 +16,7 @@ has cmd => (
 sub execute {
     my $self = shift;
 
+    infof "[localhost :: executing] %s", @{$self->cmd};
     my $result = IPC::Run::run($self->cmd, \my $stdin, \my $stdout, \my $stderr);
     $self->has_error(! $result);
     $self->error($?);
@@ -27,7 +28,7 @@ sub execute {
 
     foreach my $name (qw(stdout stderr)) {
         foreach my $line ( split /\n/, $self->$name ) {
-            infof "[localhost :: $name] %s", $line;
+            infof "[localhost :: %s] %s", $name, $line;
         }
     }
 }
