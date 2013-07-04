@@ -11,12 +11,15 @@ use Canella::Task;
 our $REMOTE;
 our @EXPORT = qw(
     current_task
+    current_remote
     get
     on_finish
     role
     remote
     run
     run_local
+    scp_get
+    scp_put
     set
     task
 );
@@ -40,7 +43,6 @@ sub set (@) {
 
 sub role ($@) {
     CTX->add_role(@_);
-
 }
 
 sub task ($$) {
@@ -87,6 +89,14 @@ sub remote (&$) {
     ));
 
     $code->($host);
+}
+
+sub scp_get(@) {
+    CTX->stash('current_remote')->scp_get(@_);
+}
+
+sub scp_put(@) {
+    CTX->stash('current_remote')->scp_get(@_);
 }
 
 sub on_finish(&;$) {
