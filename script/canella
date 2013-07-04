@@ -16,6 +16,10 @@ canella - Frontend to Canella Deploy Tool
 
 =head1 OPTIONS
 
+=head2 C< -c | --config > String
+
+Specifies the configuration file. Required.
+
 =head2 C< -C | --concurrency > Integer
 
 Specifies the number of coroutine threads to run concurrently.
