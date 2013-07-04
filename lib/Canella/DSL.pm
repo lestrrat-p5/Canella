@@ -96,11 +96,21 @@ sub remote (&$) {
 }
 
 sub scp_get(@) {
-    current_remote->connection->scp_get(@_);
+    my $remote = current_remote;
+    {
+        local $Log::Minimal::AUTODUMP = 1;
+        infof "[%s :: executing] scp_get %s", $remote->host, \@_;
+    }
+    $remote->connection->scp_get(@_);
 }
 
 sub scp_put(@) {
-    current_remote->connection->scp_put(@_);
+    my $remote = current_remote;
+    {
+        local $Log::Minimal::AUTODUMP = 1;
+        infof "[%s :: executing] scp_put %s", $remote->host, \@_;
+    }
+    $remote->connection->scp_put(@_);
 }
 
 sub on_finish(&;$) {

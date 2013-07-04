@@ -16,7 +16,7 @@ has cmd => (
 sub execute {
     my $self = shift;
 
-    infof "[localhost :: executing] %s", @{$self->cmd};
+    infof "[localhost :: executing] %s", join ' ', @{$self->cmd};
     my $result = IPC::Run::run($self->cmd, \my $stdin, \my $stdout, \my $stderr);
     $self->has_error(! $result);
     $self->error($?);
