@@ -4,6 +4,7 @@ requires 'AnyEvent';
 requires 'Coro';
 requires 'Hash::MultiValue';
 requires 'IPC::Run';
+requires 'JSON';
 requires 'Guard';
 requires 'Log::Minimal';
 requires 'Moo';

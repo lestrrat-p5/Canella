@@ -58,6 +58,12 @@ sub load_config {
     }
 }
 
+sub dump_config {
+    my $self = shift;
+    require JSON;
+    JSON->new->pretty->utf8->encode($self->config);
+}
+
 # Thread-specific stash
 sub stash {
     my $self = shift;

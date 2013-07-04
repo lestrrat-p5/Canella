@@ -19,6 +19,7 @@ sub parse_argv {
         config|c=s
         set|s=s%
         concurrency|C=i
+        mode=s
     );
     my $opts = {};
     if (! $p->getoptions($opts, @optspec)) {
@@ -35,10 +36,6 @@ sub parse_argv {
     }
 
     return @ARGV; # remaining
-}
-
-sub dump_config {
-    # XXX TODO
 }
 
 sub run {
