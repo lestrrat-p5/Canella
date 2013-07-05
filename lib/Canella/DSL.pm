@@ -33,11 +33,11 @@ sub current_task {
 }
 
 sub get (@) {
-    CTX->parameters->get(@_);
+    CTX->get_param(@_);
 }
 
 sub set (@) {
-    CTX->parameters->set(@_);
+    CTX->set_param(@_);
 }
 
 sub role ($@) {

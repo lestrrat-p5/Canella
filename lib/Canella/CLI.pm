@@ -45,14 +45,11 @@ sub run {
     local $Canella::Context::CTX = $ctx;
     my @remaining = $self->parse_argv($ctx, @argv);
 
-    $ctx->load_config();
     foreach my $key ($ctx->override_parameters->keys) {
         my $override = $ctx->override_parameters->get($key);
-        if (defined $ctx->parameters->get($key)) {
-            debugf("Overriding parameters '%s' with command line value '%s'", $key, $override);
-        }
         $ctx->parameters->set($key, $override);
     }
+    $ctx->load_config();
 
     if ($ctx->mode eq 'dump') {
         $ctx->dump_config();

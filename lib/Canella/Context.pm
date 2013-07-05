@@ -87,6 +87,22 @@ sub stash {
     }
 }
 
+sub get_param {
+    my ($self, $name) = @_;
+    return $self->parameters->get($name);
+}
+
+sub set_param {
+    my ($self, $name, $value) = @_;
+
+    # If the same parameter has been overriden in the command line, respect
+    # that instead of the actual parameter given
+    if (! defined(my $o_value = $self->overridden_parameters->get($name))) {
+        return;
+    }
+    $self->parameters->set($name, $value);
+}
+
 sub add_role {
     my ($self, $name, %args) = @_;
 
