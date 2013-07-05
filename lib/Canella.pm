@@ -42,7 +42,11 @@ Canella - Simple Deploy Tool A La Cinnamon
         } $host;
     };
 
-    task deploy => sub {
+    task 'setup:all' => sub {
+        call 'setup:perl', 'setup:apache';
+    };
+
+    task syncfiles => sub {
         my $host = shift;
         remote {
             my $dir = get "deploy_to";
@@ -63,18 +67,29 @@ Canella - Simple Deploy Tool A La Cinnamon
         } $host;
     };
 
+    task deploy => sub {
+        call 'syncfiles', 'restart:app', 'restart:apache';
+    };
+
 =head1 INVOCATION
 
 Based on the config file shown in SYNOPSIS, you can invoke commands like so:
 
-    # Run setup on production servers
+    # Run perl setup on production servers
+    canella --config=/path/to/config.pl production setup:perl
+
+    # Run apache setup AND perl setup on production servers
     canella --config=/path/to/config.pl production setup:apache setup:perl
 
+    # Or, use the shortcut we defined: setup:all
+    canella --config=/path/to/config.pl production setup:all
+
     # Run deploy (sync files) on production servers
-    canella --config=/path/to/config.pl production sync
+    canella --config=/path/to/config.pl production syncfiles
 
     # Restart apps (controlled via daemontools)
     canella --config=/path/to/config.pl production restart:app
+
 
 =head1 DESCRIPTION
 
