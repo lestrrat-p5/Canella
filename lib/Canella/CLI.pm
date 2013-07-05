@@ -47,7 +47,8 @@ sub run {
 
     foreach my $key ($ctx->override_parameters->keys) {
         my $override = $ctx->override_parameters->get($key);
-        $ctx->set_param($key, $override);
+        # Don't use set_param
+        $ctx->parameters->set($key, $override);
     }
     $ctx->load_config();
 
