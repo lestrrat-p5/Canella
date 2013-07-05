@@ -32,11 +32,11 @@ sub current_task {
     return CTX->stash('current_task');
 }
 
-sub get (@) {
+sub get ($) {
     CTX->get_param(@_);
 }
 
-sub set (@) {
+sub set ($$) {
     CTX->set_param(@_);
 }
 
