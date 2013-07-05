@@ -2,6 +2,12 @@ Revision history for Perl extension Canella
 
 {{$NEXT}}
 
+0.02 2013-07-05T01:27:47Z
+    - Document --mode=dump
+    - Overridden parameters are now set BEFORE the deploy file is evaluated.
+    - Changed prototypes for get/set DSL functions to avoid accidental
+      slurping of proceeding statements
+
 0.01 2013-07-04T12:39:15Z
 
     - original version

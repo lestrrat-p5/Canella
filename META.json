@@ -72,7 +72,7 @@
          "web" : "https://github.com/lestrrat/p5-Canella"
       }
    },
-   "version" : "0.01",
+   "version" : "0.02",
    "x_contributors" : [
       "Daisuke Maki <lestrrat+github@gmail.com>"
    ]
