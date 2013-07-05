@@ -121,6 +121,16 @@ With Canella you can do
 
     canella ... task1 task2 task2
 
+=item Supports recursive task calls
+
+While it's in their TODO, Cinnamon 0.22 doesn't support calling tasks
+recursively. Canella allows you to call other tasks from within a task:
+
+    task foo => sub {
+        call 'bar';
+    };
+    task bar => sub { ... }
+
 =item Concurrency works
 
 Cinnamon 0.22 has a broken concurrency problem where some tasks are
