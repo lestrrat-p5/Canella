@@ -12,7 +12,7 @@ canella - Frontend to Canella Deploy Tool
 
 =head1 SYNOPSIS
 
-    canella [-C num] [-s key=value ...] -c etc/deploy.pl role task [task ...]
+    canella [-C num] [-s key=value ...] [ --mode=dump ] -c etc/deploy.pl role task [task ...]
 
 =head1 OPTIONS
 
@@ -25,6 +25,11 @@ Specifies the configuration file. Required.
 Specifies the number of coroutine threads to run concurrently.
 
 The default number for this option is 8
+
+=head2 C< --mode> String
+
+Changes the operation mode. Currently the only available option is "dump" mode,
+which dumps the tasks, roles, parameters, and config file name in JSON format
 
 =head2 C< -s | --set > String '=' String
 
