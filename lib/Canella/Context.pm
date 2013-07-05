@@ -103,6 +103,10 @@ sub set_param {
     $self->parameters->set($name, $value);
 }
 
+sub get_role {
+    $_[0]->roles->get($_[1]);
+}
+
 sub add_role {
     my ($self, $name, %args) = @_;
 
@@ -113,9 +117,28 @@ sub add_role {
     $self->roles->set($name, Canella::Role->new(name => $name, %args));
 }
 
+sub get_task {
+    $_[0]->tasks->get($_[1]);
+}
+
 sub add_task {
     my $self = shift;
     $self->tasks->set($_[0]->name, $_[0]);
+}
+
+sub call_task {
+    my ($self, $task) = @_;
+    my $host = $self->stash('current_host');
+
+    debugf "Starting task %s on host %s", $task->name, $host;
+    my $guard = guard {
+        debugf "End task %s on host %s", $task->name, $host;
+    };
+    local $@;
+    eval { $task->execute($host) };
+    if (my $E = $@) {
+        critf("[%s] %s", $host, $E);
+    }
 }
 
 sub build_cmd_executor {

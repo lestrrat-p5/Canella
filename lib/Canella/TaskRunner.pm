@@ -37,19 +37,12 @@ sub execute {
     my @coros;
     foreach my $host (@$hosts) {
         push @coros, async {
-            my ($host, $tasks) = @_;
+            my ($ctx, $host, $tasks) = @_;
+            $ctx->stash(current_host => $host);
             foreach my $task (@$tasks) {
-                debugf "Starting task %s on host %s", $task->name, $host;
-                my $guard = guard {
-                    debugf "End task %s on host %s", $task->name, $host;
-                };
-                local $@;
-                eval { $task->execute($host) };
-                if (my $E = $@) {
-                    critf("[%s] %s", $host, $E);
-                }
+                $ctx->call_task($task, $host);
             }
-        } $host, $tasks;
+        } $ctx, $host, $tasks;
 
         if (@coros >= $concurrency) {
             $_->join for @coros;

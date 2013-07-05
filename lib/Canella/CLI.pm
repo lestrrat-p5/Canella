@@ -47,7 +47,7 @@ sub run {
 
     foreach my $key ($ctx->override_parameters->keys) {
         my $override = $ctx->override_parameters->get($key);
-        $ctx->parameters->set($key, $override);
+        $ctx->set_param($key, $override);
     }
     $ctx->load_config();
 
@@ -60,19 +60,19 @@ sub run {
         croakf("need a role and a task");
     }
     my $role_name = shift @remaining;
-    my $role = $ctx->roles->get($role_name);
+    my $role = $ctx->get_role($role_name);
     if (! $role) {
         croakf("Unknown role %s", $role_name);
     }
     my @tasks;
     foreach my $task_name (@remaining) {
-        my $task = $ctx->tasks->get($task_name);
+        my $task = $ctx->get_task($task_name);
         if (! $task) {
             croakf("Unknown task %s", $task_name);
         }
         push @tasks, $task;
     }
-    $ctx->parameters->set(role => $role_name);
+    $ctx->set_param(role => $role_name);
 
     my $runner = $ctx->runner;
     $runner->execute($ctx, role => $role, tasks => \@tasks);
