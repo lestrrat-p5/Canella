@@ -40,7 +40,7 @@ sub execute {
             my ($ctx, $host, $tasks) = @_;
             $ctx->stash(current_host => $host);
             foreach my $task (@$tasks) {
-                $ctx->call_task($task, $host);
+                $ctx->call_task($task);
             }
         } $ctx, $host, $tasks;
 

@@ -25,14 +25,16 @@ our @EXPORT = qw(
     task
 );
 
-sub call ($) {
-    my $task_name = shift;
+sub call (@) {
     my $ctx = CTX;
-    my $task = $ctx->get_task($task_name);
-    if (! $task) {
-        croakf("Could not find task '%s'", $task_name);
+    my @tasks = map {
+        my $task_name = $_;
+        $ctx->get_task($task_name) ||
+            croakf("Could not find task '%s'", $task_name);
+    } @_;
+    foreach my $task (@tasks) {
+        $ctx->call_task($task);
     }
-    $ctx->call_task($task, $host);
 }
 
 sub current_remote {
@@ -143,7 +145,9 @@ Canolla::DSL - DSL For Canolla File
 
 =head1 PROVIDED FUNCTIONS
 
-=head2 call $task_name
+=head2 call $task_name [, $task_name ...]
+
+Executes the given task name
 
 =head2 current_task()
 
