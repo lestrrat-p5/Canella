@@ -97,7 +97,7 @@ sub set_param {
 
     # If the same parameter has been overriden in the command line, respect
     # that instead of the actual parameter given
-    if (! defined(my $o_value = $self->override_parameters->get($name))) {
+    if (defined(my $o_value = $self->override_parameters->get($name))) {
         return;
     }
     $self->parameters->set($name, $value);
