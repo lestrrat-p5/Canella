@@ -1,5 +1,6 @@
 package Canella::Context;
 use Moo;
+use Guard;
 use Hash::MultiValue;
 use Canella::Exec::Local;
 use Canella::Log;
