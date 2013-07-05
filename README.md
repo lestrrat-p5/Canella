@@ -26,7 +26,11 @@ Canella - Simple Deploy Tool A La Cinnamon
         } $host;
     };
 
-    task deploy => sub {
+    task 'setup:all' => sub {
+        call 'setup:perl', 'setup:apache';
+    };
+
+    task syncfiles => sub {
         my $host = shift;
         remote {
             my $dir = get "deploy_to";
@@ -47,18 +51,30 @@ Canella - Simple Deploy Tool A La Cinnamon
         } $host;
     };
 
+    task deploy => sub {
+        call 'syncfiles', 'restart:app', 'restart:apache';
+    };
+
 # INVOCATION
 
 Based on the config file shown in SYNOPSIS, you can invoke commands like so:
 
-    # Run setup on production servers
+    # Run perl setup on production servers
+    canella --config=/path/to/config.pl production setup:perl
+
+    # Run apache setup AND perl setup on production servers
     canella --config=/path/to/config.pl production setup:apache setup:perl
 
+    # Or, use the shortcut we defined: setup:all
+    canella --config=/path/to/config.pl production setup:all
+
     # Run deploy (sync files) on production servers
-    canella --config=/path/to/config.pl production sync
+    canella --config=/path/to/config.pl production syncfiles
 
     # Restart apps (controlled via daemontools)
     canella --config=/path/to/config.pl production restart:app
+
+
 
 # DESCRIPTION
 
@@ -87,6 +103,16 @@ Canella is yet another deploy tool, based on [Cinnamon](http://search.cpan.org/p
     With Canella you can do
 
         canella ... task1 task2 task2
+
+- Supports recursive task calls
+
+    While it's in their TODO, Cinnamon 0.22 doesn't support calling tasks
+    recursively. Canella allows you to call other tasks from within a task:
+
+        task foo => sub {
+            call 'bar';
+        };
+        task bar => sub { ... }
 
 - Concurrency works
 

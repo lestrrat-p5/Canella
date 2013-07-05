@@ -2,6 +2,15 @@ Revision history for Perl extension Canella
 
 {{$NEXT}}
 
+0.03 2013-07-05T05:22:53Z
+    - Add call($task_name) DSL, so you can do stuff like
+
+        task foo => sub {
+            call 'bar', 'baz';
+        };
+        task bar => sub { ... };
+        task baz => sub { ... };
+
 0.02 2013-07-05T01:27:47Z
     - Document --mode=dump
     - Overridden parameters are now set BEFORE the deploy file is evaluated.
