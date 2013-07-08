@@ -40,7 +40,7 @@ sub execute {
     infof "[%s :: executing] %s", $self->host, join ' ', @$cmd;
 #$Net::OpenSSH::debug = 24;
     my $conn = $self->connection;
-    my ($stdin, $stdout, $stderr, $pid) = $conn->open3({ tty => 0}, @$cmd);
+    my ($stdin, $stdout, $stderr, $pid) = $conn->open3({ tty => 1}, @$cmd);
 
     my @handles;
     my @state = (

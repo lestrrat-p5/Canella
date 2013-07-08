@@ -1,6 +1,7 @@
 package Canella::DSL;
 use strict;
 use Exporter 'import';
+use Guard;
 use Canella 'CTX';
 use Canella::BlockGuard;
 use Canella::Exec::Local;
@@ -22,6 +23,7 @@ our @EXPORT = qw(
     scp_get
     scp_put
     set
+    sudo
     task
 );
 
@@ -65,6 +67,14 @@ sub task ($$) {
             code => $code, 
         )
     );
+}
+
+sub sudo (&) {
+    CTX->stash("sudo" => 1);
+    my $guard = guard {
+        delete CTX->stash->{sudo};
+    };
+    $_[0]->();
 }
 
 sub run(@) {
@@ -213,6 +223,16 @@ inside a C<remote()> block
 =head2 set $name, $value
 
 Sets the parameter C<$name> to point to C<$value>
+
+=head2 sudo \&code
+
+All C<run()> requests will be executed with a "sudo" appended.
+
+    remote {
+        sudo { run "ls" };
+    } $host;
+
+is equivalent to ssh $host 'sudo ls'
 
 =head2 task $name, \&code
 

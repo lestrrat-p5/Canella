@@ -145,6 +145,10 @@ sub call_task {
 sub build_cmd_executor {
     my ($self, @cmd) = @_;
 
+    if ($self->stash('sudo')) {
+        unshift @cmd, "sudo";
+    }
+
     my $cmd;
     if (my $remote = $self->stash('current_remote')) {
         $remote->cmd(\@cmd);
