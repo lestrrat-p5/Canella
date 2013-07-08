@@ -15,14 +15,18 @@ Canella - Simple Deploy Tool A La Cinnamon
         remote {
             on_finish { run "rm", "-rf", "xbuild" };
             run "git", "clone", "git://github.com/tagomoris/xbuild.git";
-            run "xbuild/perl-install", "5.16.3", "/opt/local/perl-5.16";
+            sudo {
+                run "xbuild/perl-install", "5.16.3", "/opt/local/perl-5.16";
+            };
         } $host;
     };
 
     task "setup:apache" => sub {
         my $host = shift;
         remote {
+            sudo {
                 run "yum", "install", "apache2";
+            }
         } $host;
     };
 
@@ -41,13 +45,17 @@ Canella - Simple Deploy Tool A La Cinnamon
     task "restart:app" => sub {
         my $host = shift;
         remote {
-            run "svc -h /service/myapp";
+            sudo {
+                run "svc -h /service/myapp";
+            }
         } $host;
     };
     task "restart:apache" => sub {
         my $host = shift;
         remote {
-            run "apachectl restart";
+            sudo {
+                run "apachectl restart";
+            }
         } $host;
     };
 

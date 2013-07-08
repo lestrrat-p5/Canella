@@ -5,7 +5,7 @@ use warnings;
 use Exporter 'import';
 our @EXPORT_OK = qw(CTX);
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 sub CTX { $Canella::Context::CTX }
 
