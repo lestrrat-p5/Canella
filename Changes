@@ -1,6 +1,8 @@
 Revision history for Perl extension Canella
 
 {{$NEXT}}
+
+0.05 2013-07-09T01:37:33Z
     - Add doc($section, $string) DSL, which allows you to include
       arbitrary documentation in your deploy file
     - Add --mode=help to describe the deploy file
