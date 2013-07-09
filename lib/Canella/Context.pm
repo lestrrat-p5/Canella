@@ -7,6 +7,11 @@ use Canella::Log;
 use Canella::TaskRunner;
 our $CTX;
 
+has docs => (
+    is => 'ro',
+    default => sub { Hash::MultiValue->new() }
+);
+
 has concurrency => (
     is => 'rw',
     default => 8,
@@ -53,7 +58,15 @@ sub load_config {
     my $file = $self->config;
     debugf("Loading config %s", $file);
 
-    do $file;
+    # Eval the code under a different namespace so not to pollute Context
+    my $namespace = sprintf "Canella::LoadedDeployFile::%s",
+        (my $temp = $file) =~ s/\//::/g
+    ;
+    my $code = "package $namespace;\n";
+    open my $fh, '<', $file or die "Could not open file $file: $!";
+    $code .= do { local $/; <$fh> };
+    close $fh;
+    eval $code;
     if ($@ || $!) {
         croakf("Error loading file: %s", $@ || $!);
     }
@@ -66,8 +79,80 @@ sub dump_config {
         config      => $self->config,
         parameters  => $self->parameters->as_hashref_mixed,
         roles       => $self->roles->as_hashref_mixed,
-        tasks       => [ $self->tasks->keys ],
+        tasks       => [ map {
+            { (name => $_->name, ($_->description ? (description => $_->description) : ()) ) }
+        } $self->tasks->values ]
     });
+}
+
+sub show_help {
+    my $self = shift;
+
+    # be lazy. use perldoc
+    require File::Temp;
+    require Pod::Perldoc;
+    my $tempfile = File::Temp->new();
+    print $tempfile <<EOM;
+=encoding utf-8
+
+=head1 NAME
+
+Documentation For Deploy File '@{[$self->config]}'
+
+=head1 SYNOPSIS
+
+EOM
+
+    if (my $synopsis = $self->docs->get('SYNOPSIS')) {
+        print $tempfile $synopsis;
+    } else {
+        foreach my $task ($self->tasks->values) {
+            print $tempfile <<EOM;
+    canella -c @{[$self->config]} I<role> @{[$task->name]}
+EOM
+        }
+    }
+
+    print $tempfile <<EOM;
+
+=head1 ROLES
+
+EOM
+    foreach my $role ($self->roles->values) {
+        print $tempfile <<EOM;
+=head2 @{[$role->name]}
+
+EOM
+    }
+
+    print $tempfile <<EOM;
+
+=head1 TASKS
+
+EOM
+    foreach my $task ($self->tasks->values) {
+        print $tempfile <<EOM
+=head2 @{[ $task->name ]}
+
+@{[$task->description || '']}
+
+EOM
+    }
+
+    foreach my $section (grep { !/^SYNOPSIS$/ } $self->docs->keys) {
+        print $tempfile <<EOM
+=head1 $section
+
+@{[ $self->docs->get($section) ]}
+
+EOM
+    }
+
+    print $tempfile "\n=cut\n";
+    $tempfile->flush;
+
+    local @ARGV = ('-F', $tempfile->filename);
+    exit(Pod::Perldoc->run());
 }
 
 # Thread-specific stash

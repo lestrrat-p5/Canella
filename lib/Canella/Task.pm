@@ -12,6 +12,10 @@ has name => (
     required => 1,
 );
 
+has description => (
+    is => 'rw',
+);
+
 sub add_guard;
 
 sub execute {

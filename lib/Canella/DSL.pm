@@ -14,6 +14,7 @@ our @EXPORT = qw(
     call
     current_task
     current_remote
+    doc
     get
     on_finish
     role
@@ -59,12 +60,16 @@ sub role ($@) {
     CTX->add_role(@_);
 }
 
-sub task ($$) {
-    my ($name, $code) = @_;
+sub task ($@) {
+    my $name = shift;
+    my %args = @_ % 2 ? (code => shift) : @_;
+    if (! $args{code}) {
+        Carp::croak("Task code not provided!");
+    }
     CTX->add_task(
         Canella::Task->new(
+            %args,
             name => $name,
-            code => $code, 
         )
     );
 }
@@ -140,6 +145,9 @@ sub on_error (&;$) {
     current_task->add_guard($guard->name, $guard);
 }
 
+sub doc ($$) {
+    CTX->docs->set($_[0], $_[1]);
+}
 
 1;
 
@@ -234,12 +242,31 @@ All C<run()> requests will be executed with a "sudo" appended.
 
 is equivalent to ssh $host 'sudo ls'
 
-=head2 task $name, \&code
+=head2 doc $section, $string
+
+Register a document (POD) section for this deploy file, which will be displayed in 'help' mode.
+
+Section name "SYNOPSIS" is treated differently: it is displayed at the top. All other sections are appended later in the displayed message.
+
+=head2 task $name, \&code or task $name, %args
 
 Declare a new task. There's no notion of hierarchical tasks, but you can
 always declare them by hand:
 
     task "setup:perl" => sub { ... };
     task "setup:nginx" => sub { ... };
+
+In the second form, you can pass more parameters to the task:
+
+=over 4
+
+=item code => \&code
+
+Required. The task code.
+
+=item description => $description
+
+Optional parameter to set description/documentation for this task,
+which will be used for help and dump modes
 
 =cut

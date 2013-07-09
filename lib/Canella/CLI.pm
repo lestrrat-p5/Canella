@@ -56,6 +56,10 @@ sub run {
         $ctx->dump_config();
         return;
     }
+    if ($ctx->mode eq 'help') {
+        $ctx->show_help();
+        return;
+    }
 
     if (@remaining < 2) {
         croakf("need a role and a task");
