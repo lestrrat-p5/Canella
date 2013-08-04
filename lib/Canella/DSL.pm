@@ -155,11 +155,11 @@ __END__
 
 =head1 NAME
 
-Canolla::DSL - DSL For Canolla File
+Canella::DSL - DSL For Canella File
 
 =head1 SYNOPSIS
 
-    use Canolla::DSL;
+    use Canella::DSL;
 
 =head1 PROVIDED FUNCTIONS
 
@@ -258,6 +258,11 @@ always declare them by hand:
 
 In the second form, you can pass more parameters to the task:
 
+    task "foo" => (
+        description => sub { ... },
+        code => sub { ... },
+    );
+
 =over 4
 
 =item code => \&code
@@ -268,5 +273,7 @@ Required. The task code.
 
 Optional parameter to set description/documentation for this task,
 which will be used for help and dump modes
+
+=back
 
 =cut
